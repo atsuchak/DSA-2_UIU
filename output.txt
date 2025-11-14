@@ -1,0 +1,7 @@
+Series sum: 978
+Factorial: 120
+Find max: 6
+Even count: 3
+aibohphobia: Palindrome
+Find square: 8
+fibonacci: 5

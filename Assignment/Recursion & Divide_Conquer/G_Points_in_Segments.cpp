@@ -1,24 +1,26 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int found(vector<int> a, int st, int end, int sg1, int sg2, int cnt) {
-    if(st >= end) return cnt;
+int found(vector<int> &arr, int st, int fn, int a, int b) {
+    if(st > fn) return 0;
 
-    if(a[end] >= sg1 && a[end] <= sg2) return cnt + found(a, st, end-1, sg1, sg2, cnt);
-    if(a[st] >= sg1 && a[st] <= sg2) return cnt + found(a, st+1, end, sg1, sg2, cnt);
-    found(a, st+1, end-1, sg1, sg2, cnt);
-    
+    int mid = (st+fn) / 2;
+    int midVal = arr[mid];
+
+    if(midVal >= a && midVal <= b) return 1 + found(arr, st, mid-1, a, b) + found(arr, mid+1, fn, a, b);
+    else if(midVal < a) return found(arr, mid+1, fn, a, b);
+    else return found(arr, st, mid-1, a, b);
 }
 
 void solve() {
     int n, x; cin >> n >> x;
 
-    vector<int> ar(n);
-    for(int i = 0; i < n; i++) cin >> ar[i];
+    vector<int> arr(n);
+    for(int i = 0; i < n; i++) cin >> arr[i];
 
     while(x--) {
         int a, b; cin >> a >> b;
-        cout << found(ar, 0, n-1, a, b, 0) << endl;    
+        cout << found(arr, 0, n-1, a, b) << endl;    
     }
 }
 

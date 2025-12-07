@@ -44,40 +44,47 @@ template<class T> void _print(set<T> s) {
 template<class T, class V> void _print(map<T, V> m) {
     cerr << "[ "; for(auto i : m) {_print(i); cerr << " ";} cerr << "]";}
 
-bool res(vl& stalls, ll mnDis, int x) {
-    int cnt = 1;
-    ll lstPos = stalls[0];
-    
-    for (int i = 1; i < sz(stalls); i++) {
-        if (stalls[i] - lstPos >= mnDis) {
-            cnt++;
-            lstPos = stalls[i];
-            if (cnt >= x) return 1;
-        }
+bool canFill(vl& capacities, ll mxCap, int m) {
+    int usedContain = 1;
+    ll sum = 0;
+    for (ll cap : capacities) {
+        if (cap > mxCap) return 0;
+        if (sum + cap > mxCap) {
+            usedContain++;
+            sum = cap;
+            if (usedContain > m) return 0;
+        } else sum += cap;
     }
-    return cnt >= x;
+    return 1;
 }
 
 void solve() {
-    int n, c; cin >> n >> c;
-
-    vl a(n);
-    for (int i = 0; i < n; i++) cin >> a[i];
+    int n, m; cin >> n >> m;
     
-    sort(all(a));
-    
-    ll lo = 1;
-    ll hi = a[n-1] - a[0];
-    ll ans = 1;
-    
-    while (lo <= hi) {
-        ll mid = (lo +hi) / 2;
-        if (res(a, mid, c)) {
-            ans = mid;
-            lo = mid + 1;
-        } else hi = mid - 1;
+    vl vessel(n);
+    ll mxVessel = 0, sum = 0;
+    for (int i = 0; i < n; i++) {
+        cin >> vessel[i];
+        mxVessel = max(mxVessel, vessel[i]);
+        sum += vessel[i];
     }
-    
+
+    if (m >= n) {
+        cout << mxVessel << endl;
+        return;
+    }
+
+    ll lo = mxVessel, hi = sum;
+    ll ans = sum;
+
+    while (lo <= hi) {
+        ll mid = (lo + hi) / 2;
+        if (canFill(vessel, mid, m)) {
+            ans = mid;
+            hi = mid - 1;
+        } else lo = mid + 1;
+    }
+
     cout << ans << endl;
 }
 
@@ -94,8 +101,11 @@ int main() {
     int t_case = 1;
     cin >> t_case;
 
+    int n = 1;
     while (t_case--) {
+        cout << "Case " << n << ": ";
         solve();
+        n++;
     }
 
     return 0;

@@ -1,19 +1,49 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int triFound(vector<int> a, int st, int end) {
-    if(end == -1) return 0;
+#define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
+#define sz(x) (int)(x).size()
+#define pb push_back
+#define mp make_pair
 
-    return a[end] + triFound(a, st, end-1);
-}
+using ll = long long;
+using vi = vector<int>;
+using vl = vector<ll>;
+using pii = pair<int, int>;
+using pll = pair<ll, ll>;
+using vpii = vector<pii>;
+using vpll = vector<pll>;
 
 void solve() {
     int n; cin >> n;
 
-    vector<int> a(n);
-    for(int i = 0; i < n; i++) cin >> a[i];
+    vl arr(n);
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    
+    sort(all(arr));
+    
+    ll ans = 0;
+    for (int i = 0; i < n; i++) 
+        for (int j = i + 1; j < n; j++) {
+            ll sum = arr[i] + arr[j];
+            
+            int left = j + 1, right = n - 1;
+            int idx = -1;
+            
+            while (left <= right) {
+                int mid = (left + right) / 2;
 
-    cout << triFound(a, 0, n-1) << endl;
+                if (arr[mid] < sum) {
+                    idx = mid;
+                    left = mid + 1;
+                } else right = mid - 1;
+            }
+            
+            if (idx != -1) ans += idx - j;
+        }
+        
+    cout << ans;
 }
 
 int main() {
@@ -28,10 +58,10 @@ int main() {
     int t_case = 1;
     cin >> t_case;
 
-    int n = 1;
-    while (t_case--) {
-        cout << "Case " << n << ": ";
+    for (int i = 1; i <= t_case; i++) {
+        cout << "Case " << i << ": ";
         solve();
+        if (i < t_case) cout << endl;
     }
 
     return 0;

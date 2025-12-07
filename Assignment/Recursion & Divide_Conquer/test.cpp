@@ -1,58 +1,54 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// Check if we can place C cows with at least dist "mid"
-bool canPlace(long long mid, vector<long long> &a, int N, int C) {
-    long long last = a[0];
-    int cnt = 1; // first cow placed
+#define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
+#define sz(x) (int)(x).size()
+#define pb push_back
+#define mp make_pair
 
-    for (int i = 1; i < N; i++) {
-        if (a[i] - last >= mid) {
-            cnt++;
-            last = a[i];
-            if (cnt == C) return true;
-        }
-    }
-    return false;
-}
-
-// Recursive binary search
-long long solveRec(long long l, long long r, vector<long long> &a, int N, int C) {
-    if (l > r) return r;  // r is the last valid answer
-
-    long long mid = (l + r) / 2;
-
-    if (canPlace(mid, a, N, C))
-        return solveRec(mid + 1, r, a, N, C);
-    else
-        return solveRec(l, mid - 1, a, N, C);
-}
+using ll = long long;
+using vi = vector<int>;
+using vl = vector<ll>;
+using pii = pair<int, int>;
+using pll = pair<ll, ll>;
+using vpii = vector<pii>;
+using vpll = vector<pll>;
 
 int main() {
-    ios::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int t;
-    cin >> t;
+#ifndef ONLINE_JUDGE
+    // freopen("D:/File/input.txt", "r", stdin);
+    // freopen("D:/File/output.txt", "w", stdout);
+#endif
 
-    while (t--) {
-        int N, C;
-        cin >> N >> C;
+    ll y;
+    while (cin >> y) {
+        int p; cin >> p;
+        
+        vl a(p);
+        for (int i = 0; i < p; i++) cin >> a[i];
 
-        vector<long long> a;        // create vector
-        a.reserve(N);               // optional (not required for beginners)
-
-        for (int i = 0; i < N; i++) {
-            long long x;
-            cin >> x;
-            a.push_back(x);         // store each number
+        int best = 0;
+        ll fstYr= 0, lstYr = 0;
+        
+        int j = 0;
+        for (int i = 0; i < p; i++) {
+            while (j < p && a[j] <= a[i] + y - 1) j++;
+            
+            int count = j - i;
+            
+            if (count > best) {
+                best = count;
+                fstYr = a[i];
+                lstYr = a[j - 1]; 
+            }
         }
 
-        sort(a.begin(), a.end());
-
-        long long low = 0;
-        long long high = a[N - 1] - a[0];
-
-        cout << solveRec(low, high, a, N, C) << "\n";
+        cout << best << " " << fstYr << " " << lstYr << endl;
     }
+
+    return 0;
 }
